@@ -1,0 +1,17 @@
+NOTICE
+
+掼蛋-中联储卫（GUANDAN-中联储卫）DeepSeek Harness 插件
+Copyright 2026 中联储卫（品牌方）
+
+本插件的规则引擎（lib/engine.js、lib/game.js 的算法结构）改编自开源项目：
+  AltmanD/Guandan — "Guandan" 掼蛋游戏 Python 实现
+  Copyright (c) Lu Yudong, Yu Yan
+  License: Apache License 2.0（详见 LICENSE 文件）
+
+按 Apache-2.0 §4(b)/(c) 要求声明：本发行物包含对上述项目的修改与再分发，
+修改内容为将其算法移植为 JavaScript，并依据使用者确认的规则调整（连对恰 3 对、
+钢板恰 2 三张、三带二不含王对、天王炸需四王、还贡范围 ≤10 点等）。
+
+牌型识别与合法动作生成的算法参考同样改编自该项目（utils.py / engine.py）。
+
+品牌与界面交互设计为原创，不受上述许可证约束的商标/品牌权益归品牌方所有。
