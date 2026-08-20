@@ -2,6 +2,24 @@
 
 本插件遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)：V1 系列为 `1.x.x`，后续大版本为 `2.x.x`，小版本 `1.1.x` 等。
 
+## [2.0.2] - 修复：工具 parameters 必须是标准 JSON Schema
+
+### 修复
+
+- **根因**：`guandan_state` / `guandan_hint` 的 `parameters` 传了空对象 `{}`。
+  DSH 工具注册表的硬性要求：**每个工具的 `parameters` 必须是标准 JSON Schema，
+  显式 `type: "object"` + `properties` + `required`**。空对象无法推断 `type`，
+  启动时报 `Invalid schema for function 'guandan_hint': schema must be a JSON
+  Schema of 'type: "object"', got 'type: null'`。
+- **修复**：4 个工具的 `parameters` 全部改为
+  `{ type: "object", properties: {...}, required: [] }`；`output.schema` 同步补全
+  显式 `type: "object"` 与 `text` 属性。
+
+### 测试
+
+- 冒烟自测 33 → 35 项：新增 2 项工具 schema 标准格式回归（parameters 与 output.schema
+  必须 `type:"object"`），此类问题今后启动前即被拦截。
+
 ## [2.0.1] - 修复：webServer 注入时机导致 DSH 启动崩溃
 
 ### 修复
