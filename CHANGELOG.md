@@ -2,6 +2,29 @@
 
 本插件遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)：V1 系列为 `1.x.x`，后续大版本为 `2.x.x`，小版本 `1.1.x` 等。
 
+## [2.0.1] - 修复：webServer 注入时机导致 DSH 启动崩溃
+
+### 修复
+
+- **根因**：V2 在 `apply()` 中直接访问 `ctx.webServer`，但 webServer 不在注入声明中。
+  cordis 的上下文守卫在 webServer 服务 fiber 未就绪时访问即抛
+  `cannot get property 'webServer' without inject`，导致 DSH 启动失败。
+- **修复（方案一：`ctx.inject` 延迟注入）**：
+  - 静态 `inject` 只保留 `['tools']`（apply 阶段必需）
+  - 路由注册移入 `ctx.inject(['webServer'], (inner) => { ... })` —— cordis 保证
+    webServer 服务就绪后才执行回调，回调内访问 `inner.webServer` 不会触发注入守卫
+  - 回调内保留 try/catch 防御降级 + 全局挂载标记（同包双实例只挂一次路由）
+  - 等价替代方案二 `ctx.on('webServer/ready', ...)` 已在注释中说明，采用方案一
+
+### 测试
+
+- 冒烟自测 27 → 33 项：新增 6 项注入守卫回归（cordis 风格守卫 ctx 模拟
+  `without inject` 抛错语义：inject 就绪不抛错 / webServer 缺失不抛错 / 重复 apply 只挂一次）
+- 真实 cordis 宿主集成验证 `integration-check.mjs`（本地一次性，不打入发布包）：
+  最小 Context + `provide('tools'/'webServer')` + `app.plugin(本插件)` —— 注入解析、
+  4 工具注册、`/guandan` 路由注册（经 ctx.inject 回调）、`GET /guandan/api/state` 真实响应，
+  7/7 通过
+
 ## [2.0.0] - V2：图形界面
 
 在 V1 对话工具基础上加入**浏览器牌桌 UI**，实现双端插件（host 半 + browser 半）。
