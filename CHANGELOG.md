@@ -2,6 +2,22 @@
 
 本插件遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)：V1 系列为 `1.x.x`，后续大版本为 `2.x.x`，小版本 `1.1.x` 等。
 
+## [2.1.0] - V2.1：UI 入口重定位（侧边栏 + 浮层）
+
+### 变更
+
+- **牌桌入口从输入框 dock 移出**（用户反馈：条带位置不搭，菜单应放插件区）：
+  - `sidebar.footer.action` —— 侧边栏底部入口「🃏 掼蛋」，与「插件市场」同排（官方 dsh-market 同款槽位）
+  - `shell.overlay` —— 浮层牌桌：全屏遮罩 + 居中面板，✕ / 点遮罩关闭（官方 dsh-market 同款槽位）
+  - `web-ui.plugin.item` —— 「Web UI 插件」组设置卡，可一键打开牌桌（家族插件存在时生效，注册失败自动跳过）
+- 不再占用 `conversation.input.dock`（输入框不再出现掼蛋条带）
+- 浮层为全局面，当前会话 id 从 `sessions.list.getSnapshot().current` 获取（活动会话）
+
+### 测试
+
+- 冒烟自测 35 → 39 项：客户端槽位断言更新（sidebar.footer.action / shell.overlay /
+  web-ui.plugin.item 注册 + 明确「不再占用输入框 dock」）
+
 ## [2.0.2] - 修复：工具 parameters 必须是标准 JSON Schema
 
 ### 修复
