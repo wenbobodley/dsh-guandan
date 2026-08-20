@@ -1,6 +1,6 @@
 {
   "name": "@zhonglianchuwei/dsh-guandan",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "掼蛋 Guandan card game plugin · 掼蛋-中联储卫 / GUANDAN-中联储卫 品牌版。4 人两副牌，含逢人配/进贡还贡抗贡/升级过A 完整规则；V2 起带浏览器牌桌 UI（对话工具 + 图形界面双模式）。",
   "keywords": [
     "掼蛋",
