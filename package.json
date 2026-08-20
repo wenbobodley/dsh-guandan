@@ -1,7 +1,7 @@
 {
   "name": "@zhonglianchuwei/dsh-guandan",
-  "version": "1.0.0",
-  "description": "掼蛋 Guandan card game plugin · 掼蛋-中联储卫 / GUANDAN-中联储卫 品牌版。4 人两副牌，含逢人配/进贡还贡抗贡/升级过A 完整规则，可在对话中与 Agent 对战。",
+  "version": "2.0.0",
+  "description": "掼蛋 Guandan card game plugin · 掼蛋-中联储卫 / GUANDAN-中联储卫 品牌版。4 人两副牌，含逢人配/进贡还贡抗贡/升级过A 完整规则；V2 起带浏览器牌桌 UI（对话工具 + 图形界面双模式）。",
   "keywords": [
     "掼蛋",
     "guandan",
@@ -10,12 +10,14 @@
     "poker",
     "deepseek-harness",
     "dsh",
-    "cordis"
+    "cordis",
+    "client-plugin"
   ],
   "type": "module",
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
+    "./client": "./lib/client.js",
     "./package.json": "./package.json"
   },
   "files": [
@@ -32,6 +34,13 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "slots",
+        "locale"
+      ],
+      "platform": "web"
     }
   },
   "license": "Apache-2.0",

@@ -2,6 +2,32 @@
 
 本插件遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)：V1 系列为 `1.x.x`，后续大版本为 `2.x.x`，小版本 `1.1.x` 等。
 
+## [2.0.0] - V2：图形界面
+
+在 V1 对话工具基础上加入**浏览器牌桌 UI**，实现双端插件（host 半 + browser 半）。
+
+### 新增
+
+- **浏览器牌桌（双端插件）**：
+  - 包声明 `dsh.client { platform: 'web', inject: [slots, locale] }` + `exports["./client"]`
+  - `lib/client.js`：手写 `__ModuleLoader__` 契约的 React 牌桌（免构建链），挂在官方
+    `conversation.input.dock` 槽位（输入框上方条带，可展开/收起）
+  - 牌桌显示：三家对手张数、级牌/逢人配、当前最大牌、最近出牌、你的手牌（按点数分组、
+    可点击选中）、出牌/过牌/清空/开局/刷新按钮、机器人行牌记录
+- **`/guandan/*` host 路由层**（`lib/host-routes.js`，浏览器直连）：
+  - `GET /guandan/api/state`（局面快照）/ `POST /guandan/api/new`（开局）/
+    `POST /guandan/api/play`（出牌或过，自动接续机器人）/ `POST /guandan/api/hint`（合法动作）
+  - JSON envelope 风格与 aionui-panel 一致；无 webServer 环境自动降级为纯工具
+- **双模式同局**：`lib/games.js` 会话级牌局表被工具层与路由层共享 —— UI 点牌与 Agent 调工具
+  打的是同一局牌
+- **模块重构**：出牌/过牌/自动推进逻辑抽到 `lib/playflow.js`，工具与路由共用
+
+### 测试
+
+- 引擎自测 49 项（不变）
+- 冒烟自测 10 → 27 项：新增路由层（state/new/play/hint/404/降级/注册）与客户端 bundle
+  （`__ModuleLoader__` 注册、apply/inject、dock 槽位注册）
+
 ## [1.0.0] - V1 首发
 
 掼蛋-中联储卫（GUANDAN-中联储卫）DeepSeek Harness 插件首版发布。
