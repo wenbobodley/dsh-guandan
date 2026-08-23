@@ -1,0 +1,57 @@
+{
+  "name": "@zhonglianchuwei/dsh-guandan",
+  "version": "3.0.0",
+  "description": "掼蛋 Guandan card game plugin · 掼蛋-中联储卫 / GUANDAN-中联储卫 品牌版。4 人两副牌，含逢人配/进贡还贡抗贡/升级过A 完整规则；V3 起牌桌 UI 与独立服务器完全同源（6 按钮组牌/60 秒限时/新 AI 机器人/房间联机），经 iframe 托管插件自带前端。",
+  "keywords": [
+    "掼蛋",
+    "guandan",
+    "中联储卫",
+    "card-game",
+    "poker",
+    "deepseek-harness",
+    "dsh",
+    "cordis",
+    "client-plugin"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "web",
+    "cordis.patch.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "test": "node lib/test.js && node lib/smoke.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "slots",
+        "locale",
+        "sessions"
+      ],
+      "platform": "web"
+    }
+  },
+  "license": "Apache-2.0",
+  "author": "wenbobodley <wenbobodley@users.noreply.github.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wenbobodley/dsh-guandan"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
