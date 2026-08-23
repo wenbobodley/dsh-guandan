@@ -1,0 +1,5 @@
+# 掼蛋-中联储卫（GUANDAN-中联储卫）插件 bundle patch
+# 注册 guandan 插件行：提供 guandan_new / guandan_play / guandan_state / guandan_hint 工具。
+- insert:
+    - id: guandan
+      name: '@zhonglianchuwei/dsh-guandan'
