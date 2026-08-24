@@ -2,6 +2,37 @@
 
 本插件遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)：V1 系列为 `1.x.x`，后续大版本为 `2.x.x`，小版本 `1.1.x` 等。
 
+## [3.0.0] - V3：牌桌 UI 与独立服务器完全同源（6 按钮组牌 / 60 秒 / 新 AI / 房间联机）
+
+### 背景
+
+用户反馈：DSH 侧边栏「攒蛋」进入的牌桌一直是旧版（仅"出牌/过牌/清空"3 按钮、15 秒限时、
+乱码标题「摸蛋」、笨机器人），与浏览器直开的独立服务器版（6 按钮组牌、60 秒、正确标题、智能机器人）
+严重脱节。根因：插件版（guandan-plugin）与独立服务器版（guandan-server）是**两套完全独立的代码**，
+从未同步过。作为插件发布时用户看到的也永远是旧界面。
+
+### 变更（对齐服务器版，消除分叉）
+
+- **前端 100% 同源**：`client.js` 浮层改为 **iframe 加载插件自托管的服务器版前端**
+  （`/guandan/web/index.html?api=/guandan/api&session=<sid>`），不再各自维护一套 React 牌桌；
+  服务器版改 UI，插件版复制 `web/` 目录即同步
+- **后端移植服务器版全部能力**：
+  - 新 AI `ai.js`（53 → 196 行）：拿牌权第一、对家配合、防对手走完、炸弹冲刺、组牌领出
+  - `game.js` 局结束**底牌公开**（`revealed`，含末游）
+  - `playflow.js` 手动下一局（`nextRoundManual`）+ 超时自动过牌（`auto` 标记）
+  - 新增 `rooms.js` 多人房间模型（真人 60 秒 / 机器人 5 秒 / 局结束停留手动续局）
+- **路由层补齐**：`/guandan/api/group`（组牌识别）、`/guandan/api/bgm`（背景音乐）、
+  `/guandan/api/next`（手动下一局）、`/guandan/api/room/*`（房间全套：建/加/开/出/下一局/状态/离开）、
+  `/guandan/web/*`（静态前端托管）
+- **`web/` 目录纳入发布包**（`package.json files` + `web`），随 tgz 一起分发
+- 服务器版前端 `app.js` 支持 `?api=` / `?session=` URL 参数（默认 `/api` 不变，插件 iframe 覆盖为插件路由）
+- 工具层（guandan_new/state/play/hint）不变，继续与 UI 共享同一张牌局表
+
+### 测试
+
+- 冒烟自测 + CDP 实测（手机 390×844 / 桌面 1440×900）：新 UI 正常渲染、6 按钮组牌可用、
+  `/guandan/api/group` 识别复合牌型、房间接口建/加/开/出闭环
+
 ## [2.1.2] - 修复：UI 牌面乱码（索引未转牌名）
 
 ### 修复

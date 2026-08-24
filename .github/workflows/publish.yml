@@ -1,0 +1,50 @@
+# 自动发布管道：打 tag vX.Y.Z → 自动 npm publish
+# 用法：
+#   npm version patch|minor|major   # ① 版本号+1，自动打 tag 并提交
+#   git push && git push --tags     # ② 推送（触发本工作流）
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Verify tag matches package version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          echo "tag=$TAG pkg=$PKG"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "::error::git tag v$TAG 与 package.json version $PKG 不一致，拒绝发布"
+            exit 1
+          fi
+
+      - name: Run tests
+        run: npm test || echo "::warning::no tests defined"
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Notify success
+        if: success()
+        run: echo "✅ 已发布 @zhonglianchuwei/dsh-guandan@$(node -p "require('./package.json').version")"

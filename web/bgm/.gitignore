@@ -1,0 +1,7 @@
+*.mp3
+*.ogg
+*.m4a
+*.wav
+*.flac
+*.amr
+!00-guandan.mp3
